@@ -15,6 +15,8 @@ void ships(){
 	}
 }
 
+// This is my comment
+
 int main(){
 	int i, j, k, row=1;
 	HANDLE h=GetStdHandle(STD_OUTPUT_HANDLE);
