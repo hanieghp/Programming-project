@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include<windows.h>
-#define size 9
+#include<math.h>
+#define size 8
 #define color1 15//nembers 15
 #define color2 31//waves 31
 
@@ -15,35 +16,65 @@ void ships(){
 	}
 }
 
-// This is my comment
-
 int main(){
-	int i, j, k, row=1;
+	int i, j, k,num;
+	char row='A';
 	HANDLE h=GetStdHandle(STD_OUTPUT_HANDLE);
 	ships();
 	SetConsoleTextAttribute(h, color1);
+	for(int i=1;i<=size/4;i++){
+		printf("\t");
+	}
+	printf("FOCP1");
+	for(int i=1;i<=size;i++){
+		printf("\t");
+	}
+	printf("FOCP2 \n");
+	//number column
 	printf("   ");
 	for(i=1; i<=size; i++){
 		printf(" %d  ", i);
 	}
+	for(int i=0;i<size/2;i++){
+		printf("\t");
+	}
+	for(int i=1;i<=size;i++){
+		printf(" %d  ",i);
+	}
 	printf("\n  ");
+	//board shape1 +-
 	SetConsoleTextAttribute(h, color2);
 	for(i=0; i<size; i++){
 		printf("+---");
 	}
 	printf("+");
+	for(int i=1;i<=size/2;i++){
+		printf("\t");
+	}
+	for(int i=0;i<size;i++){
+		printf("+---");
+	}
+	printf("+");
+	//boards shape |
 	SetConsoleTextAttribute(h, color1);
-//	printf("%d |", row);
-	
 	for(i=0 ; i<size; i++){
 		SetConsoleTextAttribute(h, color1);
-		printf("\n%d ", row);
+		printf("\n%c ", row);
 		SetConsoleTextAttribute(h, color2);
-		printf("|", row);
+		printf("|",row);
 		for(j=0; j<size; j++){
 			printf("  %c|",playerships[i][j]);
 		}
+		for(int l=0;l<size;l++){
+			printf("   ");
+		}
+		printf("%c",row);
+		printf(" |");
+		for(int z=0;z<size;z++){
+			printf("  %c|",playerships[i][j]);
+		}
 		row++;
+	//board shape2 +-
 		SetConsoleTextAttribute(h, color1);
 		printf("\n  ");
 		SetConsoleTextAttribute(h, color2);
@@ -51,7 +82,18 @@ int main(){
 		printf("+---");
 	}
 	printf("+");
+	for(int i=1;i<=size/2;i++){
+		printf("\t");
+	}
+	for(int i=0;i<size;i++){
+		printf("+---");
+	}
+	printf("+");
 	SetConsoleTextAttribute(h, color1);
 
 	}
+	printf(" \n");
+	printf("ARE YOU READY? \n");
+	printf("PLEASE ENTER THE NUBMER OF YOUR SHIP: ");
+	scanf("%d",&num);
 }
