@@ -1,18 +1,12 @@
-3#include <stdio.h>
+#include <stdio.h>
 #include<windows.h>
 #include<math.h>
-<<<<<<< HEAD
-#include<string.h>
 #define Size 9
-=======
-#define size 9
->>>>>>> 69f4d8eb9989a7e5e95fc72741b332386d808660
 #define color1 15//nembers 15
 #define color2 31//waves 31
 #define player1 FOCP1
 #define player2 FOCP2
 
-<<<<<<< HEAD
 int size;
 char player1name[20];
 char player2name[20];
@@ -29,12 +23,6 @@ void SetBlue(){
 }
 
 void emptyships(char playerships[][Size]){//makes cells empty
-=======
-char playerships[size][size];
-char player2ships[size][size];
-
-void Friendlyships(){
->>>>>>> 69f4d8eb9989a7e5e95fc72741b332386d808660
 	int i, j;
 	for(i=0 ; i<size; i++){
 		for(j=0; j<size; j++){
@@ -43,65 +31,13 @@ void Friendlyships(){
 	}
 }
 
-<<<<<<< HEAD
-void GetCordinates(int code){//Gets cordinates and destroy them
-	int col, row;
-	scanf("%d %d", &row, &col);
-	if(code==1){
-		player1ships[row-1][col-1]='*';
-	}
-	else if(code == 2){
-		player2ships[row-1][col-1]='*';
-	}
-}
-
-
-
 void printing_shape(){//printing shapes(+-) for boards
 	int i;
 	SetBlue();			
-=======
-void Oppentships(){
-	int i, j;
-	for(i=0 ; i<size; i++){
-		for(j=0; j<size; j++){
-			player2ships[i][j]=' ';
-		}
-	}
-}
-
-int main(){
-	int i, j, k,num;
-	char row='A';
-	HANDLE h=GetStdHandle(STD_OUTPUT_HANDLE);
-	Friendlyships();
-	Oppentships();
-	SetConsoleTextAttribute(h, color1);
-	printf("  FOCP1");
-	printf("\t\t\t  ");
-	for(i=0; i<4*size-4; i++){
-		printf(" ");
-	}
-	printf("FOCP2 \n");
-	//number column
-	printf("   ");
-	for(i=1; i<=size; i++){
-		printf(" %d  ", i);
-	}
-	printf("\t\t\t   ");
-	for(int i=1;i<=size;i++){
-		printf(" %d  ",i);
-	}
-	printf("\n  ");
-	
-	//board shape1 +-
-	SetConsoleTextAttribute(h, color2);
->>>>>>> 69f4d8eb9989a7e5e95fc72741b332386d808660
 	for(i=0; i<size; i++){
 		printf("+---");
 	}
 	printf("+");
-<<<<<<< HEAD
 	SetBlack();
 	printf("\t\t\t  ");
 	SetBlue();
@@ -110,56 +46,12 @@ int main(){
 	}
 	printf("+");
 }
-=======
-	SetConsoleTextAttribute(h, color1);
-	printf("\t\t\t  ");
-	SetConsoleTextAttribute(h, color2);
-	for(int i=0;i<size;i++){
-		printf("+---");
-	}
-	printf("+");
-	//boards shape |
-	SetConsoleTextAttribute(h, color1);
-	for(i=0 ; i<size; i++){
-		SetConsoleTextAttribute(h, color1);
-		printf("\n%c ", row);
-		SetConsoleTextAttribute(h, color2);
-		printf("|",row);
-		for(j=0; j<size; j++){
-			printf(" %c |",playerships[i][j]);
-		}
-		SetConsoleTextAttribute(h, color1);
-		printf("\t\t\t");
-		printf("%c ",row);
-		SetConsoleTextAttribute(h, color2);
-		printf("|");
-		for(int z=0;z<size;z++){
-			printf(" %c |",player2ships[i][j]);
-		}
-		row++;
-	//board shape2 +-
-		SetConsoleTextAttribute(h, color1);
-		printf("\n  ");
-		SetConsoleTextAttribute(h, color2);
-		for(k=0; k<size; k++){
-		printf("+---");
-	}
-	printf("+");
-	SetConsoleTextAttribute(h, color1);
-	printf("\t\t\t  ");
-	SetConsoleTextAttribute(h, color2);
-	for(int i=0;i<size;i++){
-		printf("+---");
-	}
-	printf("+");
-	SetConsoleTextAttribute(h, color1);
->>>>>>> 69f4d8eb9989a7e5e95fc72741b332386d808660
 
 void playername(int code){//getting the name of player
 	if(code==1){
-	scanf("%s",player1name);	
+		scanf("%s",player1name);	
 	}
-	else if(code==2){
+	else {
 		scanf("%s",player2name);
 	}	
 }
@@ -170,43 +62,89 @@ int strlen(char string[]) {//Specifying the length of players' names
    return(lenght);
 }
 
-void placementships(int k,int code){
-	int row,col;
+int checkShips(int i, int j, char code, int player){//cow cordinate, row cordinate , possition, player 1or 2
+    int k;
+    if(code == 'h'){
+        if(j+2 <= size){
+            if(player == 1){
+            for(k=j ; k<j+3 ; k++){
+                if(player1ships[i][j] != ' '){
+                        return 1;//error    
+                    }            
+                }
+                return 0;
+            }
+            if(player == 2){
+            for(k=j ; k<j+3 ; k++){
+                if(player2ships[i][j] != ' '){
+                        return 1;//error    
+                    }            
+                }
+                return 0;
+            }
+        }
+    }
+    else if(code == 'v'){
+        if(i+2 <= size){//******************i +- 2
+            if(player == 1){
+            for(k=i ; k<i+3 ; k++){
+                if(player1ships[i][j] != ' '){
+                        return 1;//error    
+                    }            
+                }
+                return 0;
+            }
+            if(player == 2){
+            for(k=i ; k<i+3 ; k++){
+                if(player2ships[i][j] != ' '){
+                        return 1;//error    
+                    }            
+                }
+                return 0;
+            }
+        }
+    }
+}
+
+void placementships(int k,int code){//get coordinate and position of ships
+	int row,col,temp;
 	char position;
 	if(code==1){
 		for(int i=0;i<k;i++){
-		 scanf("%d %d %c \n",&row,&col,&position);
+		 scanf("%d %d %c",&row,&col,&position);
 		 if(position=='h'){
 		 	for(int j=0;j<3;j++){
-		 		player1ships[row][col+j]='k';
+		 		player1ships[row-1][col+j-1]='X';
 			 }
 		 }
 		 else if(position=='v'){
 		 	for(int j=0;j<3;j++){
-		 		player1ships[row+j][col]='k';
+		 		player1ships[row+j-1][col-1]='X';
 			 }
 		 }	
 		}
 	}
-	if(code==2){
+	else {
 		for(int i=0;i<k;i++){
-		scanf("%d %d %c \n",&row,&col,&position);
+		scanf("%d %d %c",&row,&col,&position);
 		   if(position=='h'){
 		 	for(int j=0;j<3;j++){
-		 		player2ships[row][col+j]='k';
+		 		player2ships[row-1][col+j-1]='X';
 			 }
 		 }
 		 else if(position=='v'){
 		 	for(int j=0;j<3;j++){
-		 		player2ships[row+j][col]='k';
+		 		player2ships[row+j-1][col-1]='X';
 			 }
 		 }		
 		}
 	}
 }
 
+
+
 int main(){
-	int n=3,i, j, k, z, p_col, p_row;
+	int i, j, k, z, p_col, p_row;
 	char row='A'; 
 	emptyships(player1ships);//makes cells empty
 	emptyships(player2ships);//makes cells empty
@@ -222,18 +160,15 @@ int main(){
 	playername(1);
 	
 	printf("Enter the coordinates of your ships \n");
-	for(i=0 ; i<k; i++){
-		placementships(k,1);
-	}
+	placementships(k,1);
 	printf("--- \n");
 	
 	printf("Enter the name of second player \n");
 	playername(2);
 	
 	printf("Enter the coordinates of your ships \n");
-	for(i=0 ; i<k; i++){
-		placementships(k,2);
-	}
+	placementships(k,2);
+	
 	
 	//printing first line include players' names
 	printf("  %s",player1name);
@@ -294,10 +229,4 @@ int main(){
 	}
 	SetBlack();
 	printf(" \n");
-<<<<<<< HEAD
-=======
-	/*printf("ARE YOU READY? \n");
-	printf("PLEASE ENTER THE NUBMER OF YOUR SHIP: ");
-	scanf("%d",&num);*/
->>>>>>> 69f4d8eb9989a7e5e95fc72741b332386d808660
 }
