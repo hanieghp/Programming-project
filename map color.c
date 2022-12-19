@@ -15,11 +15,11 @@ void ships(){
 		}
 	}
 }
-void setTextcolor(int textColor,int backColor){
+/*void setTextcolor(int textColor,int backColor){
 	HANDLE consoleHandle = GetStdHandle(STD_OUTPUT_HANDLE);
 	int colorAttribute = backColor << 4 | textColor;
 	SetConsoleTextAttribute(consoleHandle,colorAttribute);
-}
+}*/
 
 int main(){
 	int i, j, k,num;
