@@ -64,54 +64,50 @@ int strlen(char string[]) {//Specifying the length of players' names
 
 int checkShips(int i, int j, char code, int player){//cow cordinate, row cordinate , possition, player 1or 2
     int k;
-    if(code == 'h'){
-        if(j+2 <= size){
-            if(player == 1){
+    if(code == 'h' && j+2 <= size){
+        if(player == 1){
             for(k=j ; k<j+3 ; k++){
-                if(player1ships[i][j] != ' '){
-                        return 1;//error    
-                    }            
-                }
-                return 0;
+                if(player1ships[i][j] == 'X'){
+                        return 0;//error    
+                }            
             }
-            if(player == 2){
+            return 1;
+    	}
+    	
+        if(player == 2){
             for(k=j ; k<j+3 ; k++){
-                if(player2ships[i][j] != ' '){
-                        return 1;//error    
-                    }            
-                }
-                return 0;
+                if(player2ships[i][j] == 'X'){
+                        return 0;//error    
+                }            
             }
+            return 1;
+		}
+    }
+    else if(code == 'v' && i+2 <= size){
+        if(player == 1){
+            for(k=i ; k<i+3 ; k++){
+                if(player1ships[i][j] == 'X'){
+                        return 0;//error    
+                }            
+            }
+        	return 1;
+		}
+            
+        if(player == 2){
+            for(k=i ; k<i+3 ; k++){
+                if(player2ships[i][j] == 'X'){
+                        return 0;//error    
+                }            
+            }
+			return 1;
         }
     }
-    else if(code == 'v'){
-        if(i+2 <= size){//******************i +- 2
-            if(player == 1){
-            for(k=i ; k<i+3 ; k++){
-                if(player1ships[i][j] != ' '){
-                        return 1;//error    
-                    }            
-                }
-                return 0;
-            }
-            if(player == 2){
-            for(k=i ; k<i+3 ; k++){
-                if(player2ships[i][j] != ' '){
-                        return 1;//error    
-                    }            
-                }
-                return 0;
-            }
-        }
-    }
+    return 0//overFlow or wrong code 
 }
 
-void placementships(int k,int code){//get coordinate and position of ships
-	int row,col,temp;
-	char position;
+void placementships(int row, int col, char position, int code){//get coordinate and position of ships
+	int temp;
 	if(code==1){
-		for(int i=0;i<k;i++){
-		 scanf("%d %d %c",&row,&col,&position);
 		 if(position=='h'){
 		 	for(int j=0;j<3;j++){
 		 		player1ships[row-1][col+j-1]='X';
@@ -122,11 +118,8 @@ void placementships(int k,int code){//get coordinate and position of ships
 		 		player1ships[row+j-1][col-1]='X';
 			 }
 		 }	
-		}
 	}
 	else {
-		for(int i=0;i<k;i++){
-		scanf("%d %d %c",&row,&col,&position);
 		   if(position=='h'){
 		 	for(int j=0;j<3;j++){
 		 		player2ships[row-1][col+j-1]='X';
@@ -137,7 +130,6 @@ void placementships(int k,int code){//get coordinate and position of ships
 		 		player2ships[row+j-1][col-1]='X';
 			 }
 		 }		
-		}
 	}
 }
 
@@ -145,7 +137,7 @@ void placementships(int k,int code){//get coordinate and position of ships
 
 int main(){
 	int i, j, k, z, p_col, p_row;
-	char row='A'; 
+	char row='A', position; 
 	emptyships(player1ships);//makes cells empty
 	emptyships(player2ships);//makes cells empty
 	
@@ -160,14 +152,32 @@ int main(){
 	playername(1);
 	
 	printf("Enter the coordinates of your ships \n");
-	placementships(k,1);
+	for(i=0 ; i<k ; i++){
+		scanf("%d %d %c", &p_row, &p_col, &position);
+		if(checkShips(p_row, p_col, position, 1)){
+			placementships(p_row, p_col, position, 1);
+		}
+		else{
+			printf("again\n");
+			i--;
+		}			
+	}
 	printf("--- \n");
 	
 	printf("Enter the name of second player \n");
 	playername(2);
 	
 	printf("Enter the coordinates of your ships \n");
-	placementships(k,2);
+	for(i=0 ; i<k ; i++){
+		scanf("%d %d %c", &p_row, &p_col, &position);
+		if(checkShips(p_row, p_col, position, 2)){
+			placementships(p_row, p_col, position, 2);
+		}
+		else{
+			printf("again\n");
+			i--;
+		}			
+	}
 	
 	
 	//printing first line include players' names
