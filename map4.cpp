@@ -1,18 +1,64 @@
 #include <stdio.h>
 #include<windows.h>
-#include<math.h>
+#include <conio.h>
 #define Size 9
 #define color1 15//nembers 15
 #define color2 31//waves 31
 #define player1 FOCP1
 #define player2 FOCP2
 
-int size;
-char player1name[20];
-char player2name[20];
-char player1ships[Size][Size];
-char player2ships[Size][Size];
+int size, round;
+char player1name[20], player2name[20], player1ships[Size][Size], player2ships[Size][Size], player1attacks[Size][Size], player2attacks[Size][Size];
 HANDLE h=GetStdHandle(STD_OUTPUT_HANDLE);
+
+void pFirstLine(){
+if(round % 2){
+	printf("  %s",player1name);
+	for(int i=0;i<(4*size-1)-strlen(player1name);i++){
+		printf(" ");
+	}
+	printf("\t\t\t  ");
+	printf("%s \n", player2name);
+}
+else {
+	printf("  %s",player2name);
+	for(int i=0;i<(4*size-1)-strlen(player2name);i++){
+		printf(" ");
+	}
+	printf("\t\t\t  ");
+	printf("%s \n", player1name);
+}
+}
+
+void pPlayerBoard(int n, int i){
+	int j;
+	if(round % 2){
+		if(n==1){
+			for(j=0; j<size; j++){
+				printf(" %c |",player1attacks[i][j]);
+			}
+		}
+		else if(n==2){
+			for(j=0; j<size; j++){
+				printf(" %c |",player1ships[i][j]);
+			}
+		}
+	}
+	else{
+		if(n==2){
+			for(j=0; j<size; j++){
+				printf(" %c |",player2attacks[i][j]);
+			}
+		}
+		else if(n==1){
+			for(j=0; j<size; j++){
+				printf(" %c |",player2ships[i][j]);
+			}
+		}
+	}
+}
+
+
 
 void SetBlack(){//change background to black
 	SetConsoleTextAttribute(h, color1);
@@ -22,11 +68,16 @@ void SetBlue(){
 	SetConsoleTextAttribute(h, color2);//change background to blue
 }
 
-void emptyships(char playerships[][Size]){//makes cells empty
+void emptyships(){//makes cells empty
 	int i, j;
 	for(i=0 ; i<size; i++){
 		for(j=0; j<size; j++){
-			playerships[i][j]=' ';
+			player1ships[i][j]=' ';
+		}
+	}
+	for(i=0 ; i<size; i++){
+		for(j=0; j<size; j++){
+			player2ships[i][j]=' ';
 		}
 	}
 }
@@ -67,7 +118,7 @@ int checkShips(int i, int j, char code, int player){//cow cordinate, row cordina
     if(code == 'h' && j+2 <= size){
         if(player == 1){
             for(k=j ; k<j+3 ; k++){
-                if(player1ships[i][j] == 'X'){
+                if(player1ships[i-1][j-1] == 'X'){
                         return 0;//error    
                 }            
             }
@@ -76,7 +127,7 @@ int checkShips(int i, int j, char code, int player){//cow cordinate, row cordina
     	
         if(player == 2){
             for(k=j ; k<j+3 ; k++){
-                if(player2ships[i][j] == 'X'){
+                if(player2ships[i-1][j-1] == 'X'){
                         return 0;//error    
                 }            
             }
@@ -86,7 +137,7 @@ int checkShips(int i, int j, char code, int player){//cow cordinate, row cordina
     else if(code == 'v' && i+2 <= size){
         if(player == 1){
             for(k=i ; k<i+3 ; k++){
-                if(player1ships[i][j] == 'X'){
+                if(player1ships[i-1][j-1] == 'X'){
                         return 0;//error    
                 }            
             }
@@ -95,14 +146,14 @@ int checkShips(int i, int j, char code, int player){//cow cordinate, row cordina
             
         if(player == 2){
             for(k=i ; k<i+3 ; k++){
-                if(player2ships[i][j] == 'X'){
+                if(player2ships[i-1][j-1] == 'X'){
                         return 0;//error    
                 }            
             }
 			return 1;
         }
     }
-    return 0//overFlow or wrong code 
+    return 0;//overFlow or wrong code 
 }
 
 void placementships(int row, int col, char position, int code){//get coordinate and position of ships
@@ -137,13 +188,15 @@ void placementships(int row, int col, char position, int code){//get coordinate 
 
 int main(){
 	int i, j, k, z, p_col, p_row;
-	char row='A', position; 
-	emptyships(player1ships);//makes cells empty
-	emptyships(player2ships);//makes cells empty
+	char position, row; 
+	emptyships();//makes cells empty
+	emptyships();//makes cells empty
 	
 	//getting inputs
 	printf("give size\n");
 	scanf("%d", &size);
+	emptyships();//makes cells empty
+	emptyships();//makes cells empty
 	
 	printf("Enter the number of your ships \n");
 	scanf("%d", &k);
@@ -178,15 +231,15 @@ int main(){
 			i--;
 		}			
 	}
+	//**********************************************
 	
-	
+while(1){
+	round ++ ;
+	row='A' ;
+	char row='A';
+	printf("  round : %d \n", round);
 	//printing first line include players' names
-	printf("  %s",player1name);
-	for(int i=0;i<(4*size-1)-strlen(player1name);i++){
-		printf(" ");
-	}
-	printf("\t\t\t  ");
-	printf("%s \n",player2name);
+	pFirstLine();
 	
 	//printing second line include remaining ships
 	printf("  remaining ships: %d", k);	
@@ -217,9 +270,7 @@ int main(){
 		printf("|");
 		
 		//printing first player board row(i)
-		for(j=0; j<size; j++){
-			printf(" %c |",player1ships[i][j]);
-		}
+		pPlayerBoard(1, i);
 		
 		SetBlack();
 		printf("\t\t\t");
@@ -228,9 +279,7 @@ int main(){
 		printf("|");
 		
 		//printing second player board row(i)
-		for(j=0; j<size; j++){
-			printf(" %c |",player2ships[i][j]);
-		}
+		pPlayerBoard(2, i);
 		
 		row++;
 		SetBlack();
@@ -239,4 +288,7 @@ int main(){
 	}
 	SetBlack();
 	printf(" \n");
+	getch();
+	system("cls");
+}
 }
