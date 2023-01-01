@@ -7,20 +7,12 @@
 #define player1 FOCP1
 #define player2 FOCP2
 
-int size, round;
+int size, round,  numPlayer1Ships, numPlayer2Ships;
 char player1name[20], player2name[20], player1ships[Size][Size], player2ships[Size][Size], player1attacks[Size][Size], player2attacks[Size][Size];
 HANDLE h=GetStdHandle(STD_OUTPUT_HANDLE);
 
 void pFirstLine(){
 if(round % 2){
-	printf("  %s",player1name);
-	for(int i=0;i<(4*size-1)-strlen(player1name);i++){
-		printf(" ");
-	}
-	printf("\t\t\t  ");
-	printf("%s \n", player2name);
-}
-else {
 	printf("  %s",player2name);
 	for(int i=0;i<(4*size-1)-strlen(player2name);i++){
 		printf(" ");
@@ -28,6 +20,33 @@ else {
 	printf("\t\t\t  ");
 	printf("%s \n", player1name);
 }
+else {
+	printf("  %s",player1name);
+	for(int i=0;i<(4*size-1)-strlen(player1name);i++){
+		printf(" ");
+	}
+	printf("\t\t\t  ");
+	printf("%s \n", player2name);
+}
+}
+
+void pSecondLine(){
+	if(round %2){
+		printf("  remaining ships: %d", numPlayer2Ships);	
+		for(int i=0;i<(4*size-1)-16;i++){
+			printf(" ");
+		}
+		printf("\t\t\t  ");
+		printf("remaining ships: %d \n", numPlayer1Ships);
+	}
+	else{
+		printf("  remaining ships: %d", numPlayer1Ships);	
+		for(int i=0;i<(4*size-1)-16;i++){
+			printf(" ");
+		}
+		printf("\t\t\t  ");
+		printf("remaining ships: %d \n", numPlayer2Ships);
+	}
 }
 
 void pPlayerBoard(int n, int i){
@@ -45,12 +64,12 @@ void pPlayerBoard(int n, int i){
 		}
 	}
 	else{
-		if(n==2){
+		if(n==1){
 			for(j=0; j<size; j++){
 				printf(" %c |",player2attacks[i][j]);
 			}
 		}
-		else if(n==1){
+		else if(n==2){
 			for(j=0; j<size; j++){
 				printf(" %c |",player2ships[i][j]);
 			}
@@ -64,8 +83,8 @@ void SetBlack(){//change background to black
 	SetConsoleTextAttribute(h, color1);
 }
 
-void SetBlue(){
-	SetConsoleTextAttribute(h, color2);//change background to blue
+void SetBlue(){//change background to blue
+	SetConsoleTextAttribute(h, color2);
 }
 
 void emptyships(){//makes cells empty
@@ -73,11 +92,9 @@ void emptyships(){//makes cells empty
 	for(i=0 ; i<size; i++){
 		for(j=0; j<size; j++){
 			player1ships[i][j]=' ';
-		}
-	}
-	for(i=0 ; i<size; i++){
-		for(j=0; j<size; j++){
 			player2ships[i][j]=' ';
+			player1attacks[i][j]=' ';
+			player2attacks[i][j]=' ';			
 		}
 	}
 }
@@ -118,7 +135,7 @@ int checkShips(int i, int j, char code, int player){//cow cordinate, row cordina
     if(code == 'h' && j+2 <= size){
         if(player == 1){
             for(k=j ; k<j+3 ; k++){
-                if(player1ships[i-1][j-1] == 'X'){
+                if(player1ships[i-1][k-1] != ' '){
                         return 0;//error    
                 }            
             }
@@ -127,7 +144,7 @@ int checkShips(int i, int j, char code, int player){//cow cordinate, row cordina
     	
         if(player == 2){
             for(k=j ; k<j+3 ; k++){
-                if(player2ships[i-1][j-1] == 'X'){
+                if(player2ships[i-1][k-1] != ' '){
                         return 0;//error    
                 }            
             }
@@ -137,7 +154,7 @@ int checkShips(int i, int j, char code, int player){//cow cordinate, row cordina
     else if(code == 'v' && i+2 <= size){
         if(player == 1){
             for(k=i ; k<i+3 ; k++){
-                if(player1ships[i-1][j-1] == 'X'){
+                if(player1ships[k-1][j-1] != ' '){
                         return 0;//error    
                 }            
             }
@@ -146,7 +163,7 @@ int checkShips(int i, int j, char code, int player){//cow cordinate, row cordina
             
         if(player == 2){
             for(k=i ; k<i+3 ; k++){
-                if(player2ships[i-1][j-1] == 'X'){
+                if(player2ships[k-1][j-1] != ' '){
                         return 0;//error    
                 }            
             }
@@ -160,46 +177,72 @@ void placementships(int row, int col, char position, int code){//get coordinate 
 	int temp;
 	if(code==1){
 		 if(position=='h'){
-		 	for(int j=0;j<3;j++){
-		 		player1ships[row-1][col+j-1]='X';
-			 }
+		 	player1ships[row-1][col-1] = 17 ;
+		 	player1ships[row-1][col] = 'O';
+		 	player1ships[row-1][col+1] = 16 ;
 		 }
 		 else if(position=='v'){
-		 	for(int j=0;j<3;j++){
-		 		player1ships[row+j-1][col-1]='X';
-			 }
+		 	player1ships[row-1][col-1] = 30 ;
+		 	player1ships[row][col-1] = 'O';
+		 	player1ships[row+1][col-1] = 31 ;
 		 }	
 	}
 	else {
 		   if(position=='h'){
-		 	for(int j=0;j<3;j++){
-		 		player2ships[row-1][col+j-1]='X';
-			 }
+		 	player2ships[row-1][col-1] = 17 ;
+		 	player2ships[row-1][col] = 'O';
+		 	player2ships[row-1][col+1] = 16 ;
 		 }
 		 else if(position=='v'){
-		 	for(int j=0;j<3;j++){
-		 		player2ships[row+j-1][col-1]='X';
+		 	player2ships[row-1][col-1] = 30 ;
+		 	player2ships[row][col-1] = 'O';
+		 	player2ships[row+1][col-1] = 31 ;
 			 }
 		 }		
+}
+
+void corAttack(){
+	int row,col;
+	scanf("%d %d",&row,&col);
+	if(round % 2){
+		if(player2ships[row-1][col-1] != ' '){
+			player2ships[row-1][col-1] = 'X';
+			printf("\a");
+		}
+	}
+	else{
+		if(player1ships[row-1][col-1] != ' '){
+			player1ships[row-1][col-1] = 'X';
+			printf("\a");
+		}
 	}
 }
 
-
+void checkSink(int row, int col){
+	if(round % 2){
+		if(player2ships[row-1][col-1] == 'O'){
+			
+		}
+	}
+	
+	else{
+		
+	}
+}
 
 int main(){
 	int i, j, k, z, p_col, p_row;
 	char position, row; 
-	emptyships();//makes cells empty
-	emptyships();//makes cells empty
 	
 	//getting inputs
 	printf("give size\n");
 	scanf("%d", &size);
 	emptyships();//makes cells empty
-	emptyships();//makes cells empty
 	
 	printf("Enter the number of your ships \n");
 	scanf("%d", &k);
+	numPlayer1Ships = k ;
+	numPlayer2Ships = k ;
 	
 	printf("Enter the name of first player \n");
 	playername(1);
@@ -233,7 +276,7 @@ int main(){
 	}
 	//**********************************************
 	
-while(1){
+while( numPlayer1Ships && numPlayer2Ships){
 	round ++ ;
 	row='A' ;
 	char row='A';
@@ -288,6 +331,13 @@ while(1){
 	}
 	SetBlack();
 	printf(" \n");
+	if(round % 2){
+		printf("%s,Enter the coordinate of your Attack:",player1name);
+	}
+	else{
+		printf("%s,Enter the coordinate of your Attack:",player2name);
+	}
+	corAttack();
 	getch();
 	system("cls");
 }
