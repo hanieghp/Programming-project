@@ -10,6 +10,7 @@
 int size, round,  numPlayer1Ships, numPlayer2Ships,p1_row,p1_col,p2_row,p2_col;
 char player1name[20], player2name[20], player1ships[Size][Size], player2ships[Size][Size], player1attacks[Size][Size], player2attacks[Size][Size],position1,position2;
 HANDLE h=GetStdHandle(STD_OUTPUT_HANDLE);
+FILE *infile;
 
 void pFirstLine(){
 if(round % 2){
@@ -117,10 +118,12 @@ void printing_shape(){//printing shapes(+-) for boards
 
 void playername(int code){//getting the name of player
 	if(code==1){
-		scanf("%s",player1name);	
+		scanf("%s",player1name);
+		fprintf(infile,"%s \n",player1name);	
 	}
 	else {
 		scanf("%s",player2name);
+		fprintf(infile,"%s \n",player2name);
 	}	
 }
 
@@ -363,14 +366,21 @@ void ShowBoardFirst2(){//Showing the second player's board before the game start
 int main(){
 	int i, j, k, z;
 	char row; 
-	
+	infile = fopen("inputt.txt","wt");
+	if (!infile) {
+      printf("can't open file!");
+      return 0;
+   }
+
 	//getting inputs
 	printf("give size\n");
 	scanf("%d", &size);
+	fprintf(infile,"%d \n",size);
 	emptyships();//makes cells empty
 	
 	printf("Enter the number of your ships \n");
 	scanf("%d", &k);
+	fprintf(infile,"%d \n",k);
 	numPlayer1Ships = k ;
 	numPlayer2Ships = k ;
 	
@@ -380,6 +390,7 @@ int main(){
 	printf("Enter the coordinates of your ships \n");
 	for(i=0 ; i<k ; i++){
 		scanf("%d %d %c", &p1_row, &p1_col, &position1);
+		fprintf(infile,"%d %d %c \n",p1_row,p1_col,position1);
 		if(checkShips(p1_row, p1_col, position1, 1)){
 			placementships(p1_row, p1_col, position1, 1);
 		}
@@ -389,13 +400,14 @@ int main(){
 		}			
 	}
 	printf("--- \n");
-	
+	fprintf(infile,"--- \n");
 	printf("Enter the name of second player \n");
 	playername(2);
 	
 	printf("Enter the coordinates of your ships \n");
 	for(i=0 ; i<k ; i++){
 		scanf("%d %d %c", &p2_row, &p2_col, &position2);
+		fprintf(infile,"%d %d %c \n",p2_row,p2_col,position2);
 		if(checkShips(p2_row, p2_col, position2, 2)){
 			placementships(p2_row, p2_col, position2, 2);
 		}
@@ -404,6 +416,7 @@ int main(){
 			i--;
 		}			
 	}
+	fclose(infile);
 	//**********************************************
 ShowBoardFirst1();
 	printf("\n");
