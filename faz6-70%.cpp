@@ -8,7 +8,7 @@
 #define player1 FOCP1
 #define player2 FOCP2
 
-int size,round,  numPlayer1Ships, numPlayer2Ships,p1_row,p1_col,p2_row,p2_col,nrange,tool1,arz1,tool2,arz2,k1,k2,full1=0,full2=0;
+int size,round,  numPlayer1Ships, numPlayer2Ships,p1_row,p1_col,p2_row,p2_col,nrange,tool1,arz1,tool2,arz2,k1,k2,full1=0,full2=0,nrep1,nrep2;
 char player1name[20], player2name[20], player1ships[Size][Size], player2ships[Size][Size], player1attacks[Size][Size], player2attacks[Size][Size],position1,position2,joda[10],rp[10];
 HANDLE h=GetStdHandle(STD_OUTPUT_HANDLE);
 FILE *infile;
@@ -177,7 +177,7 @@ int checkShips(int i, int j,int tool,int arz, char code, int player){//col cordi
     return 0;//overFlow or wrong code 
 }
 
-void placementships(int row, int col, char pos,int tool,int arz, int code){//get coordinate and position of ships
+void placementships(int row, int col, char pos,int tool,int arz, int code){//making ships
 	int i,j;
 	//for player1
 	if(code==1){
@@ -330,7 +330,7 @@ void placementships(int row, int col, char pos,int tool,int arz, int code){//get
 	}
 }*/
 
-void corAttack(){
+void corAttack(){//attack to
 	int row,col;
 	scanf("%d %d",&row,&col);
 	if(round % 2){
@@ -427,7 +427,7 @@ void ShowBoardFirst2(){//Showing the second player's board before the game start
 	placementships(p2_row,p2_col,position2,tool2,arz2,2);
 }
 
-void getShips1(int k){
+void getShips1(int k){//placing ships in the order player1
 	int i;
 	printf("Enter the coordinates of your ships \n");
 	for(i=1 ; i<=k ; i++){	
@@ -443,7 +443,7 @@ void getShips1(int k){
 	}
 }
 
-void getShips2(int k){
+void getShips2(int k){//placing ships in the order player2
 	int i;
 	printf("Enter the coordinates of your ships \n");
 	for(i=1 ; i<=k ; i++){	
@@ -458,7 +458,7 @@ void getShips2(int k){
 		}
 	}
 }
-void inputDim1(){
+void inputDim1(){//getting the size and number of ships player1
 	int temp;
 	printf("Enter the dimensions of your ships and their number \n");
 	scanf("%d %d %d",&tool1,&arz1,&k1);
@@ -469,40 +469,67 @@ void inputDim1(){
 	}
 }
 
-void inputDim2(){
+void inputDim2(){//getting the size and number of ships player2
 	int temp;
 	printf("Enter the dimensions of your ships and their number \n");
 	scanf("%d %d %d",&tool2,&arz2,&k2);
 	if(arz2 > tool2){
 		temp = arz2;
 		arz2 = tool2;
-		tool1 = temp;
+		tool2 = temp;
 	}
 }
-int checkNum(int n,int tool,int arz,int code){
+int checkNum(int n,int tool,int arz,int code){//Checking the number of allowed houses
 	if(code == 1){
 	full1 += tool*arz;
-	if(full1 > n){
+	   if(full1 > n){
 		full1 -= tool*arz;
 		return 0;//Error
-	}
-	else{
+	    }
+	   else{
 		return 1;
-	}	
+	    }  	
 	}
 	else{
 	full2 += tool*arz;
-	if(full2 > n){
+	   if(full2 > n){
 		full2 -= tool*arz;
 		return 0;//Error
-	}
-	else{
+	    }
+	   else{
 		return 1;
-	}		
+	    }		
 	}
 }
 
-/*void repair();*/
+void repair(int code,int nrep1,int nrep2){//repairing a attacked house
+	int row,col;
+	scanf("%d %d",&row,&col);
+	if(code==1 && nrep1 != 0){
+	  if(player1ships[row-1][col-1] == 'X'){
+		player1ships[row-1][col-1] = 'R';
+		nrep1--;
+	  }
+	  else if(player1ships[row-1][col-1] != ' '){
+		printf("This house is safe");
+	  }
+	  else{
+		printf("There is no ship in this house");
+	  }	
+	}
+	else if(code==2 && nrep2 != 0){
+	  if(player2ships[row-1][col-1] == 'X'){
+		player2ships[row-1][col-1] = 'R';
+		nrep2--;
+	  }
+	  else if(player2ships[row-1][col-1] != ' '){
+		printf("This house is safe");
+	  }
+	  else{
+		printf("There is no ship in this house");
+	  }	
+	}	
+}
 
 int main(){
 	int i, j,temp,full;
@@ -539,7 +566,7 @@ int main(){
 		scanf("%s",joda);	
 	}
 	while(strcmp(joda,"$$$") == 0);
-	
+	//*******
 	printf("Enter the name of second player \n");
 	playername(2);
 	
@@ -554,9 +581,9 @@ int main(){
 		scanf("%s",joda);	
 	}
 	while(strcmp(joda,"$$$") == 0);
-	
-	printf("--- \n");
-	fprintf(infile,"--- \n");
+	printf("Enter the number of houses that can be repaired: ");
+	scanf("%d",&nrep1);
+	nrep2 = nrep1;
 	
 	fclose(infile);
 	//**********************************************
@@ -617,27 +644,31 @@ while( numPlayer1Ships && numPlayer2Ships){
 	}
 	SetBlack();
 	printf(" \n");
+	//attack to or repair a house
 	if(round % 2){
 		printf("attack or repair? \n");
 		scanf("%s",rp);
 		if(strcmp(rp,"attack") == 0){
-		printf("%s,Enter the coordinate of your Attack:",player1name);	
+		printf("%s,Enter the coordinate of your Attack: ",player1name);
+		corAttack();	
 		}
-		/*else{
-		repair();	
-		}*/
+		else{
+			printf("%s ,Enter the coordinates of the house you want to repair: ",player1name);
+		repair(1,nrep1,nrep2);	
+		}
 	}
 	else{
 	    printf("attack or repair? \n");
 		scanf("%s",rp);
 		if(strcmp(rp,"attack") == 0){
-		printf("%s,Enter the coordinate of your Attack:",player2name);	
+		printf("%s,Enter the coordinate of your Attack:",player2name);
+		corAttack();	
 		}
-		/*else{
-		repair();	
-		}	*/
+		else{
+			printf("%s ,Enter the coordinates of the house you want to repair: ",player2name);
+		repair(2,nrep1,nrep2);	
+		}
 	}
-	corAttack();
 	getch();
 	system("cls");
 }
