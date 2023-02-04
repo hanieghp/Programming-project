@@ -34,20 +34,16 @@ else {
 
 void pSecondLine(){
 	if(round %2){
-		printf("  remaining ships: %d", numPlayer2Ships);
 		for(int i=0;i<(4*size-1)-16;i++){
 			printf(" ");
 		}
 		printf("\t\t\t  ");
-		printf("remaining ships: %d \n", numPlayer1Ships);
 	}
 	else{
-		printf("  remaining ships: %d", numPlayer1Ships);	
 		for(int i=0;i<(4*size-1)-16;i++){
 			printf(" ");
 		}
 		printf("\t\t\t  ");
-		printf("remaining ships: %d \n", numPlayer2Ships);
 	}
 }
 
@@ -78,8 +74,6 @@ void pPlayerBoard(int n, int i){
 		}
 	}
 }
-
-
 
 void SetBlack(){//change background to black
 	SetConsoleTextAttribute(h, color1);
@@ -130,7 +124,7 @@ void playername(int code){//getting the name of player
 
 int checkShips(int i, int j,int tool,int arz, char code, int player){//col cordinate, row cordinate , possition, player 1or 2
     int k,s;
-    if(code == 'h' && j+arz-2 <= size && i+tool-2 <= size){
+    if(code == 'h' && j+arz-1 <= size && i+tool-1 <= size){
         if(player == 1){
         		for(k=i;k < i+arz-1 ; k++){
         			for(s=j ; s < j+tool-1 ;s++){
@@ -152,7 +146,7 @@ int checkShips(int i, int j,int tool,int arz, char code, int player){//col cordi
 			return 1;
         }
     }
-    else if(code == 'v' && i+tool-2 <= size && j+arz-2 <= size){
+    else if(code == 'v' && i+tool-1 <= size && j+arz-1 <= size){
         if(player == 1){
             for(k=i ; k < tool+i-1 ; k++){
             	for(s=j ; s < arz+j-1 ; s++){
@@ -177,15 +171,11 @@ int checkShips(int i, int j,int tool,int arz, char code, int player){//col cordi
     return 0;//overFlow or wrong code 
 }
 
-void placementships(int row, int col, char pos,int tool,int arz, int code){//making ships
+void placementshipsP1(int row, int col, char pos,int tool,int arz){//making ships for player1
 	int i,j;
-	//for player1
-	if(code==1){
-		//****
 		if(tool == 1 && arz == 1){
 			player1ships[row-1][col-1] = 'O';
 		}
-		//****
 		else if(arz == 1 && pos == 'h'){
 			player1ships[row-1][col-1] = 17;
 			for(i=0;i<tool-2;i++){
@@ -193,7 +183,6 @@ void placementships(int row, int col, char pos,int tool,int arz, int code){//mak
 			}
 			player1ships[row-1][col+tool-2] = 16;
 		}
-		//****
 		else if(arz == 1 && pos == 'v'){
 			player1ships[row-1][col-1] = 30;
 			for(int i=0;i<tool-2;i++){
@@ -201,7 +190,6 @@ void placementships(int row, int col, char pos,int tool,int arz, int code){//mak
 			}
 			player1ships[row+arz-2][col-1] = 31;
 		}
-		//****
 		else if(pos == 'h'){
 			for(int i=-1;i<tool-1;i++){
 				player1ships[row-1][col+i] = 30;
@@ -215,7 +203,6 @@ void placementships(int row, int col, char pos,int tool,int arz, int code){//mak
 				player1ships[row+j][col+tool-2] = 16;
 			}
 		}
-		//****
 		else if(pos == 'v'){
 			for(int i=-1;i<tool-1;i++){
 				player1ships[row+i][col-1] = 17;
@@ -223,130 +210,86 @@ void placementships(int row, int col, char pos,int tool,int arz, int code){//mak
 			}
 			for(int j=0;j<arz-2;j++){
 				player1ships[row-1][col+j] = 30;
+				for(int t=0;t<arz-1;t++){
 				for(int s=0;s<arz-2;s++){
-					player1ships[row+j][col+s] = 'O';
+					player1ships[row+t][col+s] = 'O';
+				}	
 				}
 				player1ships[row+tool-2][col+j] = 31;
 			}
 		}
-    } 
-	//for player2
-	else {
-		//****
-		if(tool == 1 && arz == 1){
-			player2ships[row-1][col-1] = 'O';
-		}
-		//****
-		else if(arz == 1 && pos == 'h'){
-			player2ships[row-1][col-1] = 17;
-			for(i=0;i<tool-2;i++){
-				player2ships[row-1][col+i] = 'O';
-			}
-			player2ships[row-1][col+tool-2] = 16;
-		}
-		//****
-		else if(arz == 1 && pos == 'v'){
-			player2ships[row-1][col-1] = 30;
-			for(int i=0;i<tool-2;i++){
-				player2ships[row+i][col-1] = 'O';
-			}
-			player2ships[row+arz-2][col-1] = 31;
-		}
-		//****
-		else if(pos == 'h'){
-			for(int i=-1;i<tool-1;i++){
-				player1ships[row-1][col+i] = 30;
-				player1ships[arz+row-2][col+i] = 31; 
-			}
-			for(int j=0;j<arz-2;j++){
-				player1ships[row+j][col-1] = 17;
-				for(int s=0;s<tool-2;s++){
-				player1ships[row+j][col+s] = 'O';	
-				}
-				player1ships[row+j][col+tool-2] = 16;
-			}
-		}
-		//****
-		else if(pos == 'v'){
-			for(int i=-1;i<tool-1;i++){
-				player2ships[row+i][col-1] = 17;
-				player2ships[row+i][col+arz-2] = 16;
-			}
-			for(int j=0;j<arz-2;j++){
-				player2ships[row-1][col+j] = 30;
-				for(int s=0;s<arz-2;s++){
-					player2ships[row+j][col+s] = 'O';
-				}
-				player2ships[row+tool-2][col+j] = 31;
-			}
-		}
-    }
 }
 
-/*int checkNeigh(int row, int col){
-	if(round % 2){
-		return player2ships[row-2][col-1] != 30 && player2ships[row][col-1]!=31 && player2ships[row-1][col-2] != 17 && player2ships[row-1][col] != 16 ; 
+void placementshipsP2(int row, int col, char pos,int tool,int arz){//making ships for player2
+    int i,j;
+	if(tool == 1 && arz == 1){
+			player2ships[row-1][col-1] = 'O';
 	}
-	else{
-		return player1ships[row-2][col-1] != 30 && player1ships[row][col-1]!=31 && player1ships[row-1][col-2] != 17 && player1ships[row-1][col] != 16 ;
+	else if(arz == 1 && pos == 'h'){
+			player2ships[row-1][col-1] = 17;
+		for(i=0;i<tool-2;i++){
+				player2ships[row-1][col+i] = 'O';
+		}
+			player2ships[row-1][col+tool-2] = 16;
 	}
-}*/
-
-/*void checkSink(int row, int col){
-	if(round % 2){
-		if(player2ships[row-1][col-1] == 'O' && checkNeigh(row, col)){
-			numPlayer2Ships --;
+	else if(arz == 1 && pos == 'v'){
+			player2ships[row-1][col-1] = 30;
+		for(int i=0;i<tool-2;i++){
+				player2ships[row+i][col-1] = 'O';
 		}
-		else if(player2ships[row-1][col-1] == 30 && player2ships[row][col-1] == 'X' && player2ships[row+1][col-1] == 'X'){
-			numPlayer2Ships --;
+			player2ships[row+arz-2][col-1] = 31;
+	}
+	else if(pos == 'h'){
+		for(int i=-1;i<tool-1;i++){
+				player2ships[row-1][col+i] = 30;
+				player2ships[arz+row-2][col+i] = 31; 
 		}
-		else if(player2ships[row-1][col-1] == 31 && player2ships[row-2][col-1] == 'X' && player2ships[row-3][col-1] == 'X'){
-			numPlayer2Ships --;
-		}
-		else if(player2ships[row-1][col-1] == 16 && player2ships[row-1][col-2] == 'X' && player2ships[row-1][col-3] == 'X'){
-			numPlayer2Ships --;
-		}
-		else if(player2ships[row-1][col-1] == 17 && player2ships[row-1][col] == 'X' && player2ships[row-1][col+1] == 'X'){
-			numPlayer2Ships --;
+		for(int j=0;j<arz-2;j++){
+				player2ships[row+j][col-1] = 17;
+			for(int s=0;s<tool-2;s++){
+				player2ships[row+j][col+s] = 'O';	
+			}
+				player2ships[row+j][col+tool-2] = 16;
 		}
 	}
+	else if(pos == 'v'){
+		for(int i=-1;i<tool-1;i++){
+				player2ships[row+i][col-1] = 17;
+				player2ships[row+i][col+arz-2] = 16;
+		}
+		for(int j=0;j<arz-2;j++){
+				player2ships[row-1][col+j] = 30;
+			for(int t=0;t<arz-1;t++){
+			for(int s=0;s<arz-2;s++){
+					player2ships[row+t][col+s] = 'O';
+			}	
+			}
+				player2ships[row+tool-2][col+j] = 31;
+		}
+	}
+} 
 	
-	else{
-		if(player1ships[row-1][col-1] == 'O' && checkNeigh(row, col)){
-			numPlayer1Ships --;
-		}
-		else if(player1ships[row-1][col-1] == 30 && player1ships[row][col-1] == 'X' && player1ships[row+1][col-1] == 'X'){
-			numPlayer1Ships --;
-		}
-		else if(player1ships[row-1][col-1] == 31 && player1ships[row-2][col-1] == 'X' && player1ships[row-3][col-1] == 'X'){
-			numPlayer1Ships --;
-		}
-		else if(player1ships[row-1][col-1] == 16 && player1ships[row-1][col-2] == 'X' && player1ships[row-1][col-3] == 'X'){
-			numPlayer1Ships --;
-		}
-		else if(player1ships[row-1][col-1] == 17 && player1ships[row-1][col] == 'X' && player1ships[row-1][col+1] == 'X'){
-			numPlayer1Ships --;
-		}
-	}
-}*/
-
 void corAttack(){//attack to
 	int row,col;
 	scanf("%d %d",&row,&col);
 	if(round % 2){
 		if(player2ships[row-1][col-1] != ' '){
-			/*checkSink(row, col);*/
 			player2ships[row-1][col-1] = 'X';
-			player1attacks[row-1][col-1] = 'X';
+			full2--;
 			printf("\a");
+		}
+		else{
+			printf("wrong");
 		}
 	}
 	else{
 		if(player1ships[row-1][col-1] != ' '){
-			/*checkSink(row, col);*/
 			player1ships[row-1][col-1] = 'X';
-			player2attacks[row-1][col-1] = 'X';
+			full1--;
 			printf("\a");
+		}
+		else{
+			printf("wrong");
 		}
 	}
 }
@@ -386,7 +329,7 @@ void ShowBoardFirst1(){//Showing the first player's board before the game starts
 	printf("+");
 	SetBlack();
 	}
-	placementships(p1_row,p1_col,position1,tool1,arz1,1);
+	placementshipsP1(p1_row,p1_col,position1,tool1,arz1);
 }
 
 void ShowBoardFirst2(){//Showing the second player's board before the game starts
@@ -424,7 +367,7 @@ void ShowBoardFirst2(){//Showing the second player's board before the game start
 	printf("+");
 	SetBlack();
 	}
-	placementships(p2_row,p2_col,position2,tool2,arz2,2);
+	placementshipsP2(p2_row,p2_col,position2,tool2,arz2);
 }
 
 void getShips1(int k){//placing ships in the order player1
@@ -434,7 +377,7 @@ void getShips1(int k){//placing ships in the order player1
 	scanf("%d %d %c",&p1_row,&p1_col,&position1);
 	fscanf(infile,"%d %d %c",&p1_row,&p1_col,&position1);
 		if(checkShips(p1_row, p1_col,tool1,arz1, position1, 1) != 0){
-			placementships(p1_row, p1_col, position1,tool1,arz1, 1);
+			placementshipsP1(p1_row, p1_col, position1,tool1,arz1);
 		}
 		else{
 			printf("again\n");
@@ -450,7 +393,7 @@ void getShips2(int k){//placing ships in the order player2
 	scanf("%d %d %c",&p2_row,&p2_col,&position2);
 	fscanf(infile,"%d %d %c",&p2_row,&p2_col,&position2);
 		if(checkShips(p2_row, p2_col,tool2,arz2, position2, 2) != 0){
-			placementships(p2_row, p2_col, position2,tool2,arz2,2);
+			placementshipsP2(p2_row, p2_col, position2,tool2,arz2);
 		}
 		else{
 			printf("again\n");
@@ -502,13 +445,14 @@ int checkNum(int n,int tool,int arz,int code){//Checking the number of allowed h
 	}
 }
 
-void repair(int code,int nrep1,int nrep2){//repairing a attacked house
+void repair(int code,int nrep1,int nrep2){//repairing an attacked house
 	int row,col;
 	scanf("%d %d",&row,&col);
 	if(code==1 && nrep1 != 0){
 	  if(player1ships[row-1][col-1] == 'X'){
 		player1ships[row-1][col-1] = 'R';
 		nrep1--;
+		full1++;
 	  }
 	  else if(player1ships[row-1][col-1] != ' '){
 		printf("This house is safe");
@@ -521,6 +465,7 @@ void repair(int code,int nrep1,int nrep2){//repairing a attacked house
 	  if(player2ships[row-1][col-1] == 'X'){
 		player2ships[row-1][col-1] = 'R';
 		nrep2--;
+		full2++;
 	  }
 	  else if(player2ships[row-1][col-1] != ' '){
 		printf("This house is safe");
@@ -548,9 +493,6 @@ int main(){
 	
 	printf("Enter the allowed number of ship houses \n");
 	scanf("%d", &nrange);
-	/*fprintf(infile,"%d \n",k);
-	numPlayer1Ships = k ;
-	numPlayer2Ships = k ;*/
 	
 	printf("Enter the name of first player \n");
 	playername(1);
@@ -595,25 +537,21 @@ int main(){
 	getch();
 	system("cls");
 		
-while( numPlayer1Ships && numPlayer2Ships){
+while( full1 != 0 && full2 != 0){
 	round ++ ;
 	row='A' ;
 	char row='A';
 	printf("  round : %d \n", round);
 	//printing first line include players' names
 	pFirstLine();
-	
-	//printing second line include remaining ships
-	pSecondLine();
-	
+
 	//printing third line include col numbers
-	printf("   ");
 	for(i=1; i<=size; i++){
-		printf(" %d  ", i);
+		printf("   %d", i);
 	}
-	printf("\t\t\t   ");
+	printf("\t\t       ");
 	for(i=1; i<=size; i++){
-		printf(" %d  ",i);
+		printf("   %d",i);
 	}
 	
 	printf("\n  ");
@@ -646,7 +584,7 @@ while( numPlayer1Ships && numPlayer2Ships){
 	printf(" \n");
 	//attack to or repair a house
 	if(round % 2){
-		printf("attack or repair? \n");
+		printf("%s , attack or repair? \n",player1name);
 		scanf("%s",rp);
 		if(strcmp(rp,"attack") == 0){
 		printf("%s,Enter the coordinate of your Attack: ",player1name);
@@ -658,7 +596,7 @@ while( numPlayer1Ships && numPlayer2Ships){
 		}
 	}
 	else{
-	    printf("attack or repair? \n");
+	    printf("%s , attack or repair? \n",player2name);
 		scanf("%s",rp);
 		if(strcmp(rp,"attack") == 0){
 		printf("%s,Enter the coordinate of your Attack:",player2name);
